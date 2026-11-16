@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handwritten Digit Recognition | CNN Deep Learning System</title>
+  <meta name="description" content="B.Tech Capstone Project: Handwritten Digit Recognition System using Convolutional Neural Networks (CNN) and MNIST dataset." />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">NeuroDigit<span class="accent">AI</span></span>
+          <span class="brand-badge">B.Tech Capstone</span>
+        </div>
+      </div>
+      <nav class="nav-menu">
+        <a href="#home" class="nav-link active"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#recognizer" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Digit Recognizer</a>
+        <a href="#performance" class="nav-link"><i class="fa-solid fa-chart-line"></i> Model Performance</a>
+        <a href="#about" class="nav-link"><i class="fa-solid fa-circle-info"></i> About Project</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="#recognizer" class="btn btn-primary-sm">
+          <i class="fa-solid fa-play"></i> Live Demo
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-content">
+          <div class="hero-tag">
+            <span class="pulse-dot"></span> Convolutional Neural Network &bull; MNIST Benchmark
+          </div>
+          <h1 class="hero-heading">
+            Handwritten Digit <br />
+            <span class="gradient-text">Recognition System</span>
+          </h1>
+          <p class="hero-subtext">
+            A real-time deep learning web application powered by TensorFlow & Keras.
+            Draw any digit from <span class="highlight">0 to 9</span> on the interactive canvas
+            and watch the trained Convolutional Neural Network accurately classify it with detailed probability distributions.
+          </p>
+          <div class="hero-cta">
+            <a href="#recognizer" class="btn btn-primary">
+              <i class="fa-solid fa-draw-polygon"></i> Launch Drawing Canvas
+            </a>
+            <a href="#performance" class="btn btn-secondary">
+              <i class="fa-solid fa-square-poll-vertical"></i> View Real Metrics
+            </a>
+          </div>
+
+          <!-- Feature Badges -->
+          <div class="hero-stats">
+            <div class="stat-badge">
+              <i class="fa-solid fa-bullseye text-primary"></i>
+              <div>
+                <span class="stat-val" id="hero-acc">99.1%</span>
+                <span class="stat-lbl">Test Accuracy</span>
+              </div>
+            </div>
+            <div class="stat-badge">
+              <i class="fa-solid fa-layer-group text-accent"></i>
+              <div>
+                <span class="stat-val">70,000</span>
+                <span class="stat-lbl">MNIST Images</span>
+              </div>
+            </div>
+            <div class="stat-badge">
+              <i class="fa-solid fa-bolt text-warning"></i>
+              <div>
+                <span class="stat-val">&lt; 50ms</span>
+                <span class="stat-lbl">Inference Latency</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="demo-card-inner">
+            <div class="demo-card-header">
+              <span class="window-dot red"></span>
+              <span class="window-dot yellow"></span>
+              <span class="window-dot green"></span>
+              <span class="demo-card-title">CNN Feature Extraction Visualizer</span>
+            </div>
+            <div class="demo-card-body">
+              <div class="pipeline-flow">
+                <div class="pipeline-step">
+                  <div class="pipeline-icon"><i class="fa-solid fa-pen-fancy"></i></div>
+                  <span>User Stroke</span>
+                </div>
+                <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="pipeline-step">
+                  <div class="pipeline-icon"><i class="fa-solid fa-crop-simple"></i></div>
+                  <span>28x28 Center</span>
+                </div>
+                <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="pipeline-step">
+                  <div class="pipeline-icon"><i class="fa-solid fa-cubes"></i></div>
+                  <span>Conv Layers</span>
+                </div>
+                <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="pipeline-step active">
+                  <div class="pipeline-icon"><i class="fa-solid fa-award"></i></div>
+                  <span>Softmax 0–9</span>
+                </div>
+              </div>
+              <div class="mini-preview-box">
+                <div class="mini-digits-grid">
+                  <div class="mini-digit-badge">0</div>
+                  <div class="mini-digit-badge">1</div>
+                  <div class="mini-digit-badge">2</div>
+                  <div class="mini-digit-badge">3</div>
+                  <div class="mini-digit-badge">4</div>
+                  <div class="mini-digit-badge active">7</div>
+                  <div class="mini-digit-badge">6</div>
+                  <div class="mini-digit-badge">5</div>
+                  <div class="mini-digit-badge">8</div>
+                  <div class="mini-digit-badge">9</div>
+                </div>
+                <div class="mini-digit-caption">
+                  <i class="fa-solid fa-check-circle text-success"></i> Model predicts digit <strong>7</strong> with <strong>99.8%</strong> confidence
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Digit Recognition Section -->
+    <section id="recognizer" class="section recognizer-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag"><i class="fa-solid fa-pen-nib"></i> Live Interactive Tester</div>
+          <h2 class="section-title">Draw a Digit & Recognize</h2>
+          <p class="section-description">
+            Draw any single digit (0 through 9) inside the canvas box below. Our Flask backend processes the stroke,
+            resizes and centers the digit to 28&times;28 pixels according to MNIST standards, and passes it through the trained CNN model.
+          </p>
+        </div>
+
+        <div class="recognizer-grid">
+          <!-- Drawing Canvas Column -->
+          <div class="canvas-card">
+            <div class="card-header">
+              <div class="header-left">
+                <i class="fa-solid fa-chalkboard"></i>
+                <span>Drawing Canvas</span>
+              </div>
+              <div class="brush-size-control">
+                <label for="brush-size"><i class="fa-solid fa-paintbrush"></i> Stroke:</label>
+                <input type="range" id="brush-size" min="10" max="32" value="20" title="Adjust Brush Size" />
+                <span id="brush-val">20px</span>
+              </div>
+            </div>
+
+            <!-- Canvas Wrapper -->
+            <div class="canvas-container">
+              <canvas id="digit-canvas" width="280" height="280"></canvas>
+              <div class="canvas-crosshair"></div>
+              <div class="canvas-watermark" id="canvas-hint">Draw a digit (0–9) here</div>
+            </div>
+
+            <!-- Canvas Actions -->
+            <div class="canvas-controls">
+              <button type="button" id="clear-btn" class="btn btn-outline" title="Clear canvas">
+                <i class="fa-solid fa-eraser"></i> Clear Canvas
+              </button>
+              <button type="button" id="predict-btn" class="btn btn-primary" title="Predict drawn digit">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Predict Digit
+              </button>
+            </div>
+
+            <!-- Quick sample buttons -->
+            <div class="sample-preset-container">
+              <span class="sample-label"><i class="fa-solid fa-lightbulb"></i> Or test preset samples:</span>
+              <div class="sample-btn-group">
+                <button type="button" class="sample-btn" data-digit="0">0</button>
+                <button type="button" class="sample-btn" data-digit="1">1</button>
+                <button type="button" class="sample-btn" data-digit="2">2</button>
+                <button type="button" class="sample-btn" data-digit="3">3</button>
+                <button type="button" class="sample-btn" data-digit="4">4</button>
+                <button type="button" class="sample-btn" data-digit="5">5</button>
+                <button type="button" class="sample-btn" data-digit="6">6</button>
+                <button type="button" class="sample-btn" data-digit="7">7</button>
+                <button type="button" class="sample-btn" data-digit="8">8</button>
+                <button type="button" class="sample-btn" data-digit="9">9</button>
+              </div>
+            </div>
+
+            <!-- Error alert -->
+            <div id="error-alert" class="alert alert-danger" style="display: none;">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span id="error-message">Please draw a digit before predicting!</span>
+            </div>
+          </div>
+
+          <!-- Prediction Results Column -->
+          <div class="results-card">
+            <div class="card-header">
+              <div class="header-left">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Prediction Analysis</span>
+              </div>
+              <span class="status-indicator ready" id="status-tag">
+                <span class="dot"></span> Ready for Input
+              </span>
+            </div>
+
+            <!-- Main Prediction Display -->
+            <div class="prediction-hero" id="prediction-box">
+              <div class="prediction-empty-state" id="empty-state">
+                <div class="empty-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+                <p>Draw a digit on the canvas and click <strong>Predict Digit</strong> to view results.</p>
+              </div>
+
+              <div class="prediction-content" id="result-content" style="display: none;">
+                <div class="result-top-row">
+                  <div class="predicted-digit-box">
+                    <span class="digit-sub">Recognized Digit</span>
+                    <span class="big-digit" id="predicted-digit">-</span>
+                  </div>
+                  <div class="confidence-summary">
+                    <div class="confidence-badge" id="confidence-badge">
+                      <span class="conf-lbl">Model Confidence</span>
+                      <span class="conf-val" id="prediction-confidence">0.00%</span>
+                    </div>
+                    <div class="latency-badge">
+                      <i class="fa-solid fa-stopwatch"></i>
+                      <span>Inference: <strong id="inference-time">-- ms</strong></span>
+                    </div>
+                    <div class="preprocessed-preview">
+                      <span class="preview-lbl">CNN Input (28&times;28):</span>
+                      <img id="processed-img-preview" alt="Processed MNIST input" src="" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Probability breakdown bars -->
+                <div class="probabilities-container">
+                  <h4 class="prob-title">
+                    <i class="fa-solid fa-bars-progress"></i> Class Probability Distribution (Softmax Output)
+                  </h4>
+                  <div class="probability-bars" id="prob-bars">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preprocessing Notes -->
+            <div class="pipeline-info-footer">
+              <i class="fa-solid fa-circle-check text-success"></i>
+              <span>Smart Preprocessing: Canvas stroke &rarr; Inversion &rarr; Bounding Box Crop &rarr; Aspect-ratio Resize &rarr; Center of Mass Alignment &rarr; [0, 1] Normalization</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Model Performance Section -->
+    <section id="performance" class="section performance-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag"><i class="fa-solid fa-chart-pie"></i> Empirical Evaluation</div>
+          <h2 class="section-title">Model Performance & Metrics</h2>
+          <p class="section-description">
+            Transparent, real-world evaluation metrics computed on the unseen MNIST test set (10,000 images).
+            All figures, loss curves, and confusion matrix are dynamically loaded from our actual training checkpoint.
+          </p>
+        </div>
+
+        <!-- Metrics KPI Cards -->
+        <div class="metrics-kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-award"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Test Accuracy</span>
+              <span class="kpi-value" id="kpi-accuracy">--</span>
+              <span class="kpi-sub">On 10,000 Test Images</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon icon-emerald"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Test Loss</span>
+              <span class="kpi-value" id="kpi-loss">--</span>
+              <span class="kpi-sub">Sparse Categorical Crossentropy</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon icon-purple"><i class="fa-solid fa-microchip"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Parameters</span>
+              <span class="kpi-value" id="kpi-params">--</span>
+              <span class="kpi-sub">Trainable CNN Weights</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon icon-amber"><i class="fa-solid fa-stopwatch-20"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Training Epochs</span>
+              <span class="kpi-value" id="kpi-epochs">--</span>
+              <span class="kpi-sub">With Early Stopping</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Graphs Grid -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-chart-line text-primary"></i> Training & Validation Accuracy</h3>
+              <span class="chart-badge">Accuracy Curve</span>
+            </div>
+            <div class="chart-image-wrap">
+              <img id="chart-accuracy" src="{{ url_for('static_results', filename='accuracy.png') }}" alt="Accuracy Curve" onerror="this.src='https://placehold.co/600x400?text=Accuracy+Chart+Generating...'" />
+            </div>
+            <p class="chart-caption">
+              Shows convergence of Training vs. Validation accuracy over epochs, verifying the model learns generalizable visual patterns without overfitting.
+            </p>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-arrow-trend-down text-danger"></i> Training & Validation Loss</h3>
+              <span class="chart-badge">Loss Curve</span>
+            </div>
+            <div class="chart-image-wrap">
+              <img id="chart-loss" src="{{ url_for('static_results', filename='loss.png') }}" alt="Loss Curve" onerror="this.src='https://placehold.co/600x400?text=Loss+Chart+Generating...'" />
+            </div>
+            <p class="chart-caption">
+              Continuous reduction in cross-entropy loss across epochs confirms smooth gradient descent optimization using Adam optimizer.
+            </p>
+          </div>
+        </div>
+
+        <!-- Confusion Matrix & Classification Report -->
+        <div class="matrix-report-grid">
+          <div class="chart-card matrix-card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-table-cells text-accent"></i> Confusion Matrix Heatmap</h3>
+              <span class="chart-badge">10 &times; 10 Matrix</span>
+            </div>
+            <div class="chart-image-wrap">
+              <img id="chart-confusion" src="{{ url_for('static_results', filename='confusion_matrix.png') }}" alt="Confusion Matrix" onerror="this.src='https://placehold.co/600x400?text=Confusion+Matrix+Generating...'" />
+            </div>
+            <p class="chart-caption">
+              Diagonal dominance confirms high classification accuracy across all digits (0–9). Off-diagonal elements identify minor digit similarities (e.g., 4 vs 9 or 3 vs 5).
+            </p>
+          </div>
+
+          <!-- Per-Class Metrics Table -->
+          <div class="chart-card report-card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-list-check text-success"></i> Classification Report</h3>
+              <span class="chart-badge">Precision &bull; Recall &bull; F1</span>
+            </div>
+            <div class="table-responsive">
+              <table class="metrics-table" id="classification-table">
+                <thead>
+                  <tr>
+                    <th>Digit</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1-Score</th>
+                    <th>Support</th>
+                  </tr>
+                </thead>
+                <tbody id="metrics-table-body">
+                  <tr><td colspan="5" class="text-center">Loading metrics...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-summary-badges">
+              <span class="badge-tag">Macro Avg F1: <strong id="macro-f1">--</strong></span>
+              <span class="badge-tag">Weighted Avg F1: <strong id="weighted-f1">--</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CNN Architecture Table -->
+        <div class="architecture-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-diagram-project text-primary"></i> Neural Network Layer Specifications</h3>
+            <span class="chart-badge">TensorFlow / Keras Sequential</span>
+          </div>
+          <div class="table-responsive">
+            <table class="arch-table">
+              <thead>
+                <tr>
+                  <th>Layer #</th>
+                  <th>Layer Type</th>
+                  <th>Kernel / Units</th>
+                  <th>Activation</th>
+                  <th>Output Shape</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><code>Conv2D</code></td>
+                  <td>32 filters (3&times;3)</td>
+                  <td>ReLU</td>
+                  <td>(None, 26, 26, 32)</td>
+                  <td>Low-level spatial feature detection (edges, curves)</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><code>MaxPooling2D</code></td>
+                  <td>Pool size (2&times;2)</td>
+                  <td>-</td>
+                  <td>(None, 13, 13, 32)</td>
+                  <td>Spatial downsampling, translation invariance</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><code>Conv2D</code></td>
+                  <td>64 filters (3&times;3)</td>
+                  <td>ReLU</td>
+                  <td>(None, 11, 11, 64)</td>
+                  <td>High-level structural pattern extraction</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td><code>MaxPooling2D</code></td>
+                  <td>Pool size (2&times;2)</td>
+                  <td>-</td>
+                  <td>(None, 5, 5, 64)</td>
+                  <td>Dimensionality reduction & computational efficiency</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td><code>Dropout</code></td>
+                  <td>Rate = 0.25</td>
+                  <td>-</td>
+                  <td>(None, 5, 5, 64)</td>
+                  <td>Regularization to prevent feature co-adaptation</td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td><code>Flatten</code></td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>(None, 1600)</td>
+                  <td>Reshape 2D feature maps into 1D vector</td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td><code>Dense</code></td>
+                  <td>128 neurons</td>
+                  <td>ReLU</td>
+                  <td>(None, 128)</td>
+                  <td>Fully connected non-linear feature integration</td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td><code>Dropout</code></td>
+                  <td>Rate = 0.50</td>
+                  <td>-</td>
+                  <td>(None, 128)</td>
+                  <td>Heavy regularization for generalization</td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td><code>Dense</code></td>
+                  <td>10 neurons</td>
+                  <td>Softmax</td>
+                  <td>(None, 10)</td>
+                  <td>Normalized probability distribution over classes 0–9</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Project Section -->
+    <section id="about" class="section about-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag"><i class="fa-solid fa-graduation-cap"></i> Capstone Overview</div>
+          <h2 class="section-title">About The Project</h2>
+          <p class="section-description">
+            Comprehensive documentation of the theoretical concepts, dataset, architecture, and technology stack.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <!-- Card 1: What is MNIST? -->
+          <div class="about-card">
+            <div class="about-icon"><i class="fa-solid fa-database text-primary"></i></div>
+            <h3 class="about-card-title">The MNIST Benchmark</h3>
+            <p class="about-card-text">
+              The <strong>Modified National Institute of Standards and Technology (MNIST)</strong> dataset is the gold standard benchmark in machine learning computer vision. It contains <strong>70,000 grayscale images</strong> of handwritten digits:
+            </p>
+            <ul class="about-list">
+              <li><i class="fa-solid fa-circle-check"></i> <strong>60,000 training images</strong> and <strong>10,000 test images</strong>.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Each digit is size-normalized and centered in a fixed-size <strong>28&times;28 pixel grid</strong>.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Pixel intensity values range from 0 (black background) to 255 (white stroke).</li>
+            </ul>
+          </div>
+
+          <!-- Card 2: Why CNNs? -->
+          <div class="about-card">
+            <div class="about-icon"><i class="fa-solid fa-network-wired text-accent"></i></div>
+            <h3 class="about-card-title">Why CNN for Digits?</h3>
+            <p class="about-card-text">
+              Traditional Multi-Layer Perceptrons (MLPs) discard 2D spatial relationships by flattening images immediately. CNNs solve this by preserving grid topology:
+            </p>
+            <ul class="about-list">
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Local Receptive Fields:</strong> Convolution kernels capture local features (loops, strokes, slants) regardless of location.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Weight Sharing:</strong> The same kernel slides across the entire image, drastically reducing parameter count.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Spatial Invariance:</strong> Max-pooling ensures digits are recognized even if slightly shifted or tilted.</li>
+            </ul>
+          </div>
+
+          <!-- Card 3: Preprocessing Pipeline -->
+          <div class="about-card">
+            <div class="about-icon"><i class="fa-solid fa-sliders text-warning"></i></div>
+            <h3 class="about-card-title">Production Preprocessing</h3>
+            <p class="about-card-text">
+              Raw canvas drawings differ from MNIST in line width, centering, and scale. Our preprocessing pipeline matches MNIST exact conditions:
+            </p>
+            <ul class="about-list">
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Grayscale Inversion:</strong> Dark stroke on white canvas is converted to bright stroke on dark background.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Bounding Box Cropping:</strong> Removes empty margins and isolates drawn content.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Aspect Ratio Resizing:</strong> Digit fits inside a 20&times;20 box, then padded to 28&times;28 by center of mass.</li>
+            </ul>
+          </div>
+
+          <!-- Card 4: Technologies Used -->
+          <div class="about-card">
+            <div class="about-icon"><i class="fa-solid fa-cubes-stacked text-success"></i></div>
+            <h3 class="about-card-title">Technology Stack</h3>
+            <div class="tech-tags">
+              <span class="tech-tag"><i class="fa-brands fa-python"></i> Python 3.11</span>
+              <span class="tech-tag"><i class="fa-solid fa-brain"></i> TensorFlow / Keras</span>
+              <span class="tech-tag"><i class="fa-solid fa-server"></i> Flask 3.x</span>
+              <span class="tech-tag"><i class="fa-brands fa-html5"></i> HTML5 Canvas</span>
+              <span class="tech-tag"><i class="fa-brands fa-css3-alt"></i> Modern CSS3</span>
+              <span class="tech-tag"><i class="fa-brands fa-js"></i> Vanilla JavaScript</span>
+              <span class="tech-tag"><i class="fa-solid fa-calculator"></i> NumPy</span>
+              <span class="tech-tag"><i class="fa-solid fa-image"></i> Pillow (PIL)</span>
+              <span class="tech-tag"><i class="fa-solid fa-chart-simple"></i> Matplotlib &amp; Seaborn</span>
+              <span class="tech-tag"><i class="fa-solid fa-flask"></i> Scikit-Learn</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Meta / Team Footer -->
+        <div class="project-meta-box">
+          <div class="meta-item">
+            <span class="meta-label">Capstone Title</span>
+            <span class="meta-val">Handwritten Digit Recognition System Using Convolutional Neural Network (CNN)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Degree &amp; Course</span>
+            <span class="meta-val">B.Tech Major Capstone Project &bull; Deep Learning &amp; AI</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Platform &amp; Environment</span>
+            <span class="meta-val">Windows 11 &bull; Google Antigravity &bull; Python Virtual Environment</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <div class="brand">
+          <div class="brand-icon"><i class="fa-solid fa-brain"></i></div>
+          <span class="brand-title">NeuroDigit<span class="accent">AI</span></span>
+        </div>
+        <p class="footer-desc">
+          B.Tech Capstone Project &bull; Handwritten Digit Recognition System using Deep Convolutional Neural Networks.
+        </p>
+      </div>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#recognizer">Live Recognizer</a>
+        <a href="#performance">Performance Metrics</a>
+        <a href="#about">About Project</a>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Handwritten Digit Recognition System. Built with TensorFlow, Flask &amp; Modern Web Standards.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+
